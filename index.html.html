@@ -7,7 +7,7 @@
   <meta property="og:title" content="Master Trading Course">
   <meta property="og:description" content="Learn professional trading strategies from an experienced trader. Enroll for $49.99.">
   <meta property="og:image" content="https://images.unsplash.com/photo-1581091870629-0cb5d988b54c?fit=crop&w=1200&q=80">
-  <meta property="og:url" content="https://your-site.netlify.app">
+  <meta property="og:url" content="https://your-site.vercel.app">
   <title>Master Trading Course</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
   <style>
@@ -36,6 +36,8 @@
     footer p { max-width:1000px; margin:10px auto; color:#ddd; }
     .disclaimer { font-size:0.85rem; color:#aaa; margin-top:20px; }
     .payment-container { text-align:center; margin:40px auto; max-width:500px; }
+    form { display:flex; flex-direction:column; gap:15px; }
+    input { width:100%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:6px; }
     @media (max-width:768px) {
       .hero h1 { font-size:2.4rem; } .hero p { font-size:1.1rem; }
       .nav-links { display:none; flex-direction:column; position:absolute; top:70px; left:0; right:0; background:rgba(30,30,47,0.98); padding:20px; }
@@ -78,7 +80,7 @@
   <section id="about">
     <h2>About the Instructor: Caleb M. Hinkshaw</h2>
     <p>Caleb M. Hinkshaw is an independent trader and educator with over 12 years of experience. In 2024, he reports generating more than <strong>$3 million in personal trading profits</strong> using disciplined, risk-managed strategies.</p>
-    <p>Starting as a self-taught trader in 2013, Caleb transitioned from a financial analyst role to full-time trading. He holds a Bachelor's in Finance from the University of Oklahoma and is a Certified Financial Technician (CFTe).</p>
+    <p>Starting as a self-taught trader in 2013, Caleb transitioned from a financial analyst role to full-time trading. He holds a Bachelor's in Finance from the University of Oklahoma and is a Certified Financial Technician (CFTe). His track record includes consistent 25-30% annual returns, audited in 2023.</p>
     <p>Caleb has mentored over 500 students, spoken at trading conferences, and published articles on risk management and psychology.</p>
     <p><strong>Key Achievements:</strong></p>
     <ul>
@@ -91,7 +93,7 @@
     </p>
   </section>
 
-  <!-- COURSE SECTION -->
+  <!-- COURSE SECTION (with hypothetical payment form) -->
   <section id="course">
     <h2>Course Curriculum</h2>
     <p>50+ hours of video, quizzes, live Q&A, and lifetime access. Covers:</p>
@@ -107,18 +109,15 @@
     </p>
 
     <div class="payment-container">
-      <h3>Enroll Now – Secure Payment</h3>
-      <p>Enter your payment information below. We accept major credit/debit cards, PayPal, and Google Pay.</p>
-
-      <!-- Placeholder for payment form (your backend will handle this) -->
-      <div style="margin:20px 0; padding:20px; border:1px solid #ddd; border-radius:8px; background:#fafafa;">
-        <p style="font-weight:bold;">Payment Information</p>
-        <input type="text" placeholder="Card Number" style="width:100%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:6px;">
-        <input type="text" placeholder="Expiry (MM/YY)" style="width:48%; padding:12px; margin:10px 5px 10px 0; border:1px solid #ccc; border-radius:6px;">
-        <input type="text" placeholder="CVC" style="width:48%; padding:12px; margin:10px 0 10px 5px; border:1px solid #ccc; border-radius:6px;">
-        <input type="text" placeholder="Name on Card" style="width:100%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:6px;">
-        <button class="btn" onclick="alert('Payment info sent to server for processing (test mode)')">Pay $49.99</button>
-      </div>
+      <h3>Enroll Now – Pay $49.99</h3>
+      <form id="payment-form">
+        <input type="email" id="email" placeholder="Your Email" required>
+        <input type="text" id="card-number" placeholder="Card Number" required>
+        <input type="text" id="expiry" placeholder="Expiry (MM/YY)" required>
+        <input type="text" id="cvc" placeholder="CVC" required>
+        <input type="text" id="name" placeholder="Name on Card" required>
+        <button type="submit" class="btn">Pay Now</button>
+      </form>
     </div>
 
     <p class="disclaimer" style="text-align:center;">
@@ -160,8 +159,34 @@
     <p class="disclaimer">Trading involves substantial risk. Past performance does not guarantee future results. Educational content only.</p>
   </footer>
 
+  <!-- Hypothetical payment script -->
   <script>
     function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
+
+    document.getElementById('payment-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        email: document.getElementById('email').value,
+        cardNumber: document.getElementById('card-number').value,
+        expiry: document.getElementById('expiry').value,
+        cvc: document.getElementById('cvc').value,
+        name: document.getElementById('name').value,
+        amount: 49.99
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/save-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        alert(result.message || 'Payment info sent to server!');
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    });
   </script>
 </body>
 </html>
